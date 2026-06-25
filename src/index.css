@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #050505;
+  --color-surface: #121212;
+  --color-surface-2: #1e1e1e;
+  --color-accent: #D4A373;
+  --color-accent-2: #FAEDCD;
+  --font-sans: 'Inter', sans-serif;
+
+  --animate-shape-enter: shape-enter 1s ease-out forwards;
+  --animate-shape-float: shape-float 6s ease-in-out infinite;
+  --animate-marquee: marquee 25s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 30s linear infinite;
+
+  @keyframes shape-enter {
+    0% { opacity: 0; transform: scale(0.8) rotate(var(--shape-rotate-start)); }
+    100% { opacity: 1; transform: scale(1) rotate(var(--shape-rotate)); }
+  }
+  @keyframes shape-float {
+    0%, 100% { transform: translateY(0) rotate(var(--shape-rotate)); }
+    50% { transform: translateY(-20px) rotate(calc(var(--shape-rotate) + 5deg)); }
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes marquee-reverse {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: white;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  body::-webkit-scrollbar {
+    width: 10px;
+  }
+  body::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  body::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 5px;
+  }
+  body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, var(--color-accent), var(--color-accent-2));
+  }
+}
+
+/* Custom Elements styling for spline-viewer */
+spline-viewer::part(logo) {
+  display: none !important;
+}
+
