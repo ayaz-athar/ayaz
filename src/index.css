@@ -2,11 +2,12 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-bg: #050505;
-  --color-surface: #121212;
-  --color-surface-2: #1e1e1e;
-  --color-accent: #D4A373;
-  --color-accent-2: #FAEDCD;
+  --color-bg: #000000;
+  --color-surface: #0a0a0a;
+  --color-surface-2: #121212;
+  --color-accent: #ffffff;
+  --color-accent-2: #e5e5e5;
+  --color-accent-dark: #404040;
   --font-sans: 'Inter', sans-serif;
 
   --animate-shape-enter: shape-enter 1s ease-out forwards;

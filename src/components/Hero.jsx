@@ -6,9 +6,20 @@ import '@splinetool/viewer';
 
 export default function Hero() {
   const [isSplineLoaded, setIsSplineLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const splineRef = useRef(null);
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
     const spline = splineRef.current;
     if (!spline) return;
 
@@ -54,7 +65,7 @@ export default function Hero() {
             setIsSplineLoaded(true);
           }
         }
-      } catch (err) {
+      } catch {
         // Ignore cross-origin errors
       }
     }, 300);
@@ -66,14 +77,14 @@ export default function Hero() {
         clearTimeout(safetyTimeout);
         setIsSplineLoaded(true);
       }
-    } catch (e) {}
+    } catch {}
 
     return () => {
       spline.removeEventListener('load', handleLoad);
       clearTimeout(safetyTimeout);
       clearInterval(interval);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-20 pb-10 sm:pt-24 sm:pb-12 md:pt-28 md:pb-16 border-b border-white/10">
@@ -139,46 +150,68 @@ export default function Hero() {
         </div>
         
         <div className="relative h-[360px] sm:h-[460px] lg:h-[560px] w-full flex items-center justify-center">
-          {/* Skeleton/Loader while the Spline scene is loading */}
-          {!isSplineLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="relative w-full h-full max-w-md mx-auto flex flex-col items-center justify-center">
-                 <motion.div 
-                   animate={{ rotate: 360 }}
-                   transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                   className="absolute w-64 h-64 rounded-full border border-white/5"
-                 />
-                 <motion.div 
-                   animate={{ rotate: -360 }}
-                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                   className="absolute w-48 h-48 rounded-full border border-dashed border-accent/20"
-                 />
-                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,163,115,0.05)_0%,transparent_70%)] animate-pulse mix-blend-screen" />
-                 
-                 <div className="flex flex-col items-center gap-3 z-10">
-                    <div className="h-10 w-10 rounded-full border-2 border-accent border-r-transparent animate-spin"></div>
-                    <span className="text-xs font-medium text-white/40 tracking-widest uppercase">Loading 3D Experience</span>
-                 </div>
+          {isMobile ? (
+            /* Elegant 2D Core for Mobile */
+            <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full border border-white/10 flex items-center justify-center bg-gradient-to-tr from-white/5 to-transparent shadow-2xl">
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-4 rounded-full border border-dashed border-white/20"
+              />
+              <motion.div 
+                animate={{ rotate: -360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-8 rounded-full border border-white/5"
+              />
+              {/* Inner glowing core */}
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/5 border border-white/30 flex items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.15)]">
+                <Sparkles size={28} className="text-white animate-pulse" />
               </div>
             </div>
-          )}
+          ) : (
+            <>
+              {/* Skeleton/Loader while the Spline scene is loading */}
+              {!isSplineLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="relative w-full h-full max-w-md mx-auto flex flex-col items-center justify-center">
+                     <motion.div 
+                       animate={{ rotate: 360 }}
+                       transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                       className="absolute w-64 h-64 rounded-full border border-white/5"
+                     />
+                     <motion.div 
+                       animate={{ rotate: -360 }}
+                       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                       className="absolute w-48 h-48 rounded-full border border-dashed border-accent/20"
+                     />
+                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,163,115,0.05)_0%,transparent_70%)] animate-pulse mix-blend-screen" />
+                     
+                     <div className="flex flex-col items-center gap-3 z-10">
+                        <div className="h-10 w-10 rounded-full border-2 border-accent border-r-transparent animate-spin"></div>
+                        <span className="text-xs font-medium text-white/40 tracking-widest uppercase">Loading 3D Experience</span>
+                     </div>
+                  </div>
+                </div>
+              )}
 
-          {/* Spline Viewer for the Mystic Fox 3D Robot */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ 
-              opacity: isSplineLoaded ? 1 : 0, 
-              scale: isSplineLoaded ? 1 : 0.95 
-            }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full h-full relative z-10 pointer-events-auto"
-          >
-            <spline-viewer
-              ref={splineRef}
-              url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-              class="w-full h-full block"
-            />
-          </motion.div>
+              {/* Spline Viewer for the Mystic Fox 3D Robot */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ 
+                  opacity: isSplineLoaded ? 1 : 0, 
+                  scale: isSplineLoaded ? 1 : 0.95 
+                }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="w-full h-full relative z-10 pointer-events-auto"
+              >
+                <spline-viewer
+                  ref={splineRef}
+                  url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                  class="w-full h-full block"
+                />
+              </motion.div>
+            </>
+          )}
         </div>
       </div>
     </section>

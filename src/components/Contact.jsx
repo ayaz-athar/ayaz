@@ -62,6 +62,19 @@ export default function Contact() {
               </svg>
             </a>
 
+            {/* X (formerly Twitter) */}
+            <a 
+              href="https://x.com/_ayazathar" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-all duration-300 hover:scale-115 hover:rotate-6 hover:text-accent hover:border-accent hover:bg-white/10" 
+              aria-label="X (formerly Twitter)"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+
             {/* Instagram */}
             <a 
               href="https://instagram.com/_ayazathar" 

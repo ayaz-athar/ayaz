@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Code } from 'lucide-react';
 import SplitTextReveal from './SplitTextReveal';
+import PixelCard from './PixelCard';
 
 export default function About() {
   return (
@@ -51,22 +52,30 @@ export default function About() {
           </div>
 
           {/* Central Portrait / Motto Card */}
-          <div className="relative order-first mx-auto w-full max-w-[320px] md:order-none md:col-start-2">
-            <div className="relative overflow-hidden grid place-items-center border border-white/10 rounded-[18px] isolate transition-colors duration-200 bg-surface motion-safe:shadow-[0_0_40px_-8px_rgba(212,163,115,0.2)] aspect-[4/5]">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg/80 z-0"></div>
+          <div className="relative order-first mx-auto w-full max-w-[320px] md:order-none md:col-start-2 flex items-stretch">
+            <PixelCard 
+              variant="default" 
+              gap={5} 
+              speed={35} 
+              colors="#ffffff,#e5e5e5,#a3a3a3,#404040" 
+              className="w-full aspect-[4/5] flex h-full"
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-[2] pointer-events-none"></div>
               <div className="absolute inset-0 z-10 flex h-full flex-col items-center justify-between p-6 text-center">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-accent-2">Quote</p>
-                  <h3 className="mt-2 text-2xl font-semibold text-gradient">Ayaz Athar</h3>
+                  <p className="text-xs uppercase tracking-[0.2em] text-accent-2 animate-pulse">Quote</p>
+                  <h3 className="mt-2 text-2xl font-semibold text-gradient">Fyodor Dostoevsky</h3>
                 </div>
                 
-                <SplitTextReveal text="Talk is cheap." revealText="Show me the code." />
+                <div className="my-auto z-10">
+                  <SplitTextReveal text="The mystery of existence..." revealText="...is finding something to live for." />
+                </div>
                 
-                <p className="text-sm text-white/60 leading-relaxed">
-                  Consistently improving and building real-world projects.
+                <p className="text-xs text-white/50 leading-relaxed z-10 italic">
+                  "To live without hope is to cease to live."
                 </p>
               </div>
-            </div>
+            </PixelCard>
           </div>
 
           {/* Card 3 */}
