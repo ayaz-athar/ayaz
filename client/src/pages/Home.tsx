@@ -24,7 +24,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "snake" | "flappy" | "slither" | "fraud";
+  visualType: "snake" | "flappy" | "slither" | "fraud" | "pathfinding";
   className: string;
 };
 
@@ -41,7 +41,6 @@ const projects: Project[] = [
     title: "3D Snake",
     description: "A spatial game experiment built around movement, timing, and three-dimensional interaction.",
     stack: ["JavaScript", "3D", "Game logic"],
-    image: "/manus-storage/ayaz-project-snake_e43cf48f.jpg",
     url: "https://github.com/ayaz-athar/3D_Snake",
     visualType: "snake",
     className: "project-wide",
@@ -51,7 +50,6 @@ const projects: Project[] = [
     title: "Flappy Bird Game",
     description: "A focused browser-game build exploring input, collision, and responsive game flow.",
     stack: ["JavaScript", "HTML", "CSS"],
-    image: "/manus-storage/ayaz-project-flappy_2048d218.jpg",
     url: "https://github.com/ayaz-athar/flappy-bird-game",
     visualType: "flappy",
     className: "project-tall",
@@ -61,7 +59,6 @@ const projects: Project[] = [
     title: "Slither.io Clone",
     description: "A multiplayer-inspired interaction study centred on continuous motion and play systems.",
     stack: ["JavaScript", "Canvas", "Game logic"],
-    image: "/manus-storage/ayaz-project-slither_76bc39b5.jpg",
     url: "https://github.com/ayaz-athar/slither.io",
     visualType: "slither",
     className: "project-compact",
@@ -71,7 +68,17 @@ const projects: Project[] = [
     title: "Credit Card Fraud Detection",
     description: "A Python and AI/ML project focused on identifying meaningful patterns in transaction data.",
     stack: ["Python", "Machine Learning", "AI/ML"],
+    url: "https://github.com/ayaz-athar/credit-card-fraud-detection",
     visualType: "fraud",
+    className: "project-research",
+  },
+  {
+    index: "05",
+    title: "Pathfinding Visualizer",
+    description: "An interactive algorithm visualizer exploring graph traversal, A* search, and pathfinding dynamics.",
+    stack: ["React", "TypeScript", "Algorithms"],
+    url: "https://github.com/ayaz-athar",
+    visualType: "pathfinding",
     className: "project-research",
   },
 ];
@@ -112,10 +119,18 @@ function SectionMarker({ number, label }: { number: string; label: string }) {
 }
 
 function ProjectCard({ project }: { project: Project }) {
+  const [imageError, setImageError] = useState(false);
+
   const content = (
     <>
       <div className="project-visual">
-        {project.image ? <img src={project.image} alt="" /> : <div className="research-visual" aria-hidden="true"><Code2 size={42} strokeWidth={1.05} /></div>}
+        {project.image && !imageError ? (
+          <img src={project.image} alt="" onError={() => setImageError(true)} />
+        ) : (
+          <div className="research-visual" aria-hidden="true">
+            <Code2 size={42} strokeWidth={1.05} />
+          </div>
+        )}
         <div className={`project-artifact artifact-${project.visualType}`} aria-hidden="true">
           {Array.from({ length: 6 }).map((_, index) => <span key={index} />)}
         </div>
@@ -168,7 +183,15 @@ export default function Home() {
       <main id="top">
         <section className="hero" aria-labelledby="hero-heading">
           <div className="hero-grid" aria-hidden="true" />
-          <div className="hero-image" aria-hidden="true"><img src="/manus-storage/ayaz-hero-cinematic_0f173e58.jpg" alt="" /></div>
+          <div className="hero-image" aria-hidden="true">
+            <img
+              src="/manus-storage/ayaz-hero-cinematic_0f173e58.jpg"
+              alt=""
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          </div>
           <div className="hero-content reveal">
             <p className="micro-label">AYAZ ATHAR — DEVELOPER</p>
             <h1 id="hero-heading">Building digital experiences<br />with <em>code &amp; intelligence.</em></h1>

@@ -137,6 +137,14 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
 .artifact-fraud span:nth-child(4) { left: 52%; height: 63%; background: var(--moss); }
 .artifact-fraud span:nth-child(5) { left: 63%; height: 48%; }
 .artifact-fraud span:nth-child(6) { left: 74%; height: 74%; }
+.artifact-pathfinding { background-image: radial-gradient(circle at 50% 50%, rgba(245,245,245,0.12) 1.5px, transparent 1.5px); background-size: 20px 20px; opacity: 0.75; }
+.artifact-pathfinding span { position: absolute; border-radius: 50%; border: 1px solid rgba(245,245,245,0.4); background: rgba(8,8,8,0.6); }
+.artifact-pathfinding span:nth-child(1) { top: 25%; left: 22%; width: 1.2rem; height: 1.2rem; }
+.artifact-pathfinding span:nth-child(2) { top: 40%; left: 45%; width: 1.4rem; height: 1.4rem; border-color: var(--moss); background: rgba(147,170,130,0.25); }
+.artifact-pathfinding span:nth-child(3) { top: 62%; left: 28%; width: 1rem; height: 1rem; }
+.artifact-pathfinding span:nth-child(4) { top: 68%; left: 70%; width: 1.4rem; height: 1.4rem; border-color: var(--moss); }
+.artifact-pathfinding span:nth-child(5) { top: 32%; left: 75%; width: 1.1rem; height: 1.1rem; }
+.artifact-pathfinding span:nth-child(6) { top: 44%; left: 48%; width: 26%; height: 1px; border: none; border-radius: 0; background: linear-gradient(90deg, var(--moss), rgba(245,245,245,0.3)); transform: rotate(22deg); transform-origin: left center; }
 .project-index { position: absolute; top: 1rem; left: 1rem; color: #d8d8d8; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; }
 .project-view { position: absolute; right: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: 0.4rem; color: var(--ink); font-size: 0.63rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; transition: gap 180ms cubic-bezier(0.23, 1, 0.32, 1); }
 .project-item:hover .project-view { gap: 0.7rem; }
