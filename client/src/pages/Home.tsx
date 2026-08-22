@@ -24,7 +24,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "snake" | "flappy" | "slither" | "fraud" | "pathfinding";
+  visualType: "snake" | "flappy" | "slither" | "fraud" | "pathfinding" | "speedtest";
   className: string;
 };
 
@@ -80,6 +80,15 @@ const projects: Project[] = [
     url: "https://github.com/ayaz-athar",
     visualType: "pathfinding",
     className: "project-research",
+  },
+  {
+    index: "06",
+    title: "SpeedTest",
+    description: "A high-precision network benchmark measuring real-time latency, download, and upload speeds with an SVG speedometer gauge.",
+    stack: ["JavaScript", "Streams API", "Node.js", "Express"],
+    url: "https://github.com/ayaz-athar/SpeedTest",
+    visualType: "speedtest",
+    className: "project-research project-span-full",
   },
 ];
 
