@@ -29,8 +29,8 @@ My personal portfolio website showcasing my **skills, projects, experience, and 
 ## 📦 Run Locally
 
 ```bash
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 Built with ❤️ by **Ayaz Athar**.

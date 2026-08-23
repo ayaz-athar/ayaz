@@ -32,16 +32,23 @@ Open `client/src/index.css`. Near the top, the color variables govern the full i
 
 ## Change visual assets
 
-Search for `manus-storage` in `client/src/pages/Home.tsx` to find the hero texture, three project images, and the square index mark. To substitute one, upload your new asset through the project file interface and replace the relevant `src="..."` URL. Keep image `alt` text meaningful wherever the image is content rather than decoration.
+Visual assets such as the hero image and favicon can be placed in `client/public/` or replaced in `client/src/pages/Home.tsx`. Keep image `alt` text meaningful wherever the image is content rather than decoration.
 
-| Asset | Search term | Recommended shape |
+| Asset | Location | Recommended shape |
 | --- | --- | --- |
-| Hero texture | `ayaz-hero-cinematic` | Landscape, 16:9, dark and text-safe |
-| 3D Snake canvas | `ayaz-project-snake` | Landscape, 4:3 |
-| Flappy Bird canvas | `ayaz-project-flappy` | Landscape, 4:3 |
-| Slither.io canvas | `ayaz-project-slither` | Landscape, 4:3 |
-| Browser mark | `favicon.svg` | Square technical double-bar index symbol |
+| Hero image | `client/src/pages/Home.tsx` (`hero-image`) | Landscape, 16:9, dark and text-safe |
+| Browser mark | `client/public/favicon.svg` | Square technical double-bar index symbol |
 
-## Preview and download
+## Preview and build
 
-Use the project preview to verify navigation and mobile layout after an edit. You chose not to connect the website code to GitHub; its public GitHub links remain unchanged. The project can still be downloaded as a ZIP from the **More** menu. Saving a version preserves the code but does not publish the website.
+Run the local development server to test changes:
+
+```bash
+npm run dev
+```
+
+To create a production build in `dist/`:
+
+```bash
+npm run build
+```

@@ -16,6 +16,11 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { FraudCard3D } from "../components/FraudCard3D";
+import { SnakeScene3D } from "../components/SnakeScene3D";
+import { FlappyPhysicsScene } from "../components/FlappyPhysicsScene";
+import { SlitherTraceScene } from "../components/SlitherTraceScene";
+import { SpeedGaugeScene } from "../components/SpeedGaugeScene";
 
 type Project = {
   index: string;
@@ -24,7 +29,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "snake" | "flappy" | "slither" | "fraud" | "pathfinding" | "speedtest";
+  visualType: "snake" | "flappy" | "slither" | "fraud" | "speedtest";
   className: string;
 };
 
@@ -43,7 +48,7 @@ const projects: Project[] = [
     stack: ["JavaScript", "3D", "Game logic"],
     url: "https://github.com/ayaz-athar/3D_Snake",
     visualType: "snake",
-    className: "project-wide",
+    className: "project-compact",
   },
   {
     index: "02",
@@ -74,15 +79,6 @@ const projects: Project[] = [
   },
   {
     index: "05",
-    title: "Pathfinding Visualizer",
-    description: "An interactive algorithm visualizer exploring graph traversal, A* search, and pathfinding dynamics.",
-    stack: ["React", "TypeScript", "Algorithms"],
-    url: "https://github.com/ayaz-athar",
-    visualType: "pathfinding",
-    className: "project-research",
-  },
-  {
-    index: "06",
     title: "SpeedTest",
     description: "A high-precision network benchmark measuring real-time latency, download, and upload speeds with an SVG speedometer gauge.",
     stack: ["JavaScript", "Streams API", "Node.js", "Express"],
@@ -130,19 +126,39 @@ function SectionMarker({ number, label }: { number: string; label: string }) {
 function ProjectCard({ project }: { project: Project }) {
   const [imageError, setImageError] = useState(false);
 
+  const isFraudProject = project.visualType === "fraud";
+  const isSnakeProject = project.visualType === "snake";
+  const isFlappyProject = project.visualType === "flappy";
+  const isSlitherProject = project.visualType === "slither";
+  const isSpeedtestProject = project.visualType === "speedtest";
+
   const content = (
     <>
       <div className="project-visual">
-        {project.image && !imageError ? (
-          <img src={project.image} alt="" onError={() => setImageError(true)} />
+        {isFraudProject ? (
+          <FraudCard3D />
+        ) : isSnakeProject ? (
+          <SnakeScene3D />
+        ) : isFlappyProject ? (
+          <FlappyPhysicsScene />
+        ) : isSlitherProject ? (
+          <SlitherTraceScene />
+        ) : isSpeedtestProject ? (
+          <SpeedGaugeScene />
         ) : (
-          <div className="research-visual" aria-hidden="true">
-            <Code2 size={42} strokeWidth={1.05} />
-          </div>
+          <>
+            {project.image && !imageError ? (
+              <img src={project.image} alt="" onError={() => setImageError(true)} />
+            ) : (
+              <div className="research-visual" aria-hidden="true">
+                <Code2 size={42} strokeWidth={1.05} />
+              </div>
+            )}
+            <div className={`project-artifact artifact-${project.visualType}`} aria-hidden="true">
+              {Array.from({ length: 6 }).map((_, index) => <span key={index} />)}
+            </div>
+          </>
         )}
-        <div className={`project-artifact artifact-${project.visualType}`} aria-hidden="true">
-          {Array.from({ length: 6 }).map((_, index) => <span key={index} />)}
-        </div>
         <span className="project-index">{project.index}</span>
         {project.url ? <span className="project-view">View project <ArrowUpRight size={16} /></span> : <span className="project-view project-study">AI / ML study</span>}
       </div>
