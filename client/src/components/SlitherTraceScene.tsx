@@ -1,6 +1,20 @@
 import React, { useEffect, useRef } from "react";
 
-interface PeerNode {
+interface SlitherEntity {
+  x: number;
+  y: number;
+  angle: number;
+  speed: number;
+  turnSpeed: number;
+  targetTurnSpeed: number;
+  turnTimer: number;
+  maxHistory: number;
+  headRadius: number;
+  history: { x: number; y: number }[];
+  phaseOffset: number;
+}
+
+interface PelletNode {
   x: number;
   y: number;
   vx: number;
@@ -20,10 +34,6 @@ export function SlitherTraceScene() {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    const prefersReducedMotion = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
     let animationFrameId: number;
     let width = 0;
     let height = 0;
@@ -31,8 +41,8 @@ export function SlitherTraceScene() {
     // Resize handling with devicePixelRatio
     const handleResize = () => {
       const rect = container.getBoundingClientRect();
-      width = rect.width;
-      height = rect.height;
+      width = rect.width || 320;
+      height = rect.height || 260;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       canvas.width = Math.floor(width * dpr);
@@ -48,184 +58,194 @@ export function SlitherTraceScene() {
     resizeObserver.observe(container);
     handleResize();
 
-    // Static reduced-motion rendering
-    if (prefersReducedMotion) {
-      const drawStaticCurve = () => {
-        ctx.clearRect(0, 0, width, height);
+    const cx = () => width / 2;
+    const cy = () => height / 2;
 
-        // Faint background dot grid
-        ctx.fillStyle = "rgba(245, 245, 245, 0.05)";
-        for (let x = 24; x < width; x += 36) {
-          for (let y = 24; y < height; y += 36) {
-            ctx.fillRect(x, y, 1, 1);
-          }
-        }
+    // 3-4 Curving Snakes (Centered in the card)
+    const snakes: SlitherEntity[] = [
+      // 1. Primary Leader Snake
+      {
+        x: (width || 320) * 0.48,
+        y: (height || 260) * 0.52,
+        angle: 0.5,
+        speed: 46,
+        turnSpeed: 0,
+        targetTurnSpeed: 0,
+        turnTimer: 0,
+        maxHistory: 140,
+        headRadius: 3.5,
+        history: [],
+        phaseOffset: 0,
+      },
+      // 2. Secondary Companion Snake
+      {
+        x: (width || 320) * 0.55,
+        y: (height || 260) * 0.45,
+        angle: 2.4,
+        speed: 40,
+        turnSpeed: 0,
+        targetTurnSpeed: 0,
+        turnTimer: 0.2,
+        maxHistory: 95,
+        headRadius: 3.0,
+        history: [],
+        phaseOffset: 2.1,
+      },
+      // 3. Small Scout Snake A
+      {
+        x: (width || 320) * 0.42,
+        y: (height || 260) * 0.48,
+        angle: -1.2,
+        speed: 36,
+        turnSpeed: 0,
+        targetTurnSpeed: 0,
+        turnTimer: 0.35,
+        maxHistory: 70,
+        headRadius: 2.5,
+        history: [],
+        phaseOffset: 4.2,
+      },
+      // 4. Small Scout Snake B
+      {
+        x: (width || 320) * 0.52,
+        y: (height || 260) * 0.56,
+        angle: 3.8,
+        speed: 34,
+        turnSpeed: 0,
+        targetTurnSpeed: 0,
+        turnTimer: 0.15,
+        maxHistory: 55,
+        headRadius: 2.5,
+        history: [],
+        phaseOffset: 5.5,
+      },
+    ];
 
-        // Static self-intersecting lemniscate / Lissajous curve
-        ctx.strokeStyle = "#93AA82";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        const cx = width / 2;
-        const cy = height / 2;
-        const rx = width * 0.35;
-        const ry = height * 0.32;
-
-        for (let t = 0; t <= Math.PI * 2; t += 0.03) {
-          const px = cx + rx * Math.sin(2 * t);
-          const py = cy + ry * Math.sin(3 * t);
-          if (t === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-        ctx.stroke();
-
-        // 3 Hollow peer nodes
-        const staticPeers = [
-          { x: cx - rx * 0.6, y: cy - ry * 0.4 },
-          { x: cx + rx * 0.5, y: cy + ry * 0.5 },
-          { x: cx - rx * 0.2, y: cy + ry * 0.7 },
-        ];
-
-        staticPeers.forEach((p) => {
-          ctx.strokeStyle = "#93AA82";
-          ctx.lineWidth = 1;
-          ctx.fillStyle = "#080808";
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-        });
-      };
-
-      setTimeout(drawStaticCurve, 50);
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }
-
-    // Dynamic Live Signal Trace Simulation
-    // Main curving snake particle
-    let snakeHead = {
-      x: width * 0.45 || 120,
-      y: height * 0.5 || 100,
-      angle: 0.8,
-      speed: 48, // px per second
-      turnSpeed: 0,
-      targetTurnSpeed: 0,
-    };
-
-    const history: { x: number; y: number }[] = [];
-    const MAX_HISTORY = 220; // trace length
-
-    // 3 Independent Drifting Hollow Peer Nodes
-    const peerNodes: PeerNode[] = [
-      { x: 80, y: 70, vx: 14, vy: 11, radius: 3.5 },
-      { x: 220, y: 140, vx: -12, vy: 16, radius: 3.5 },
-      { x: 160, y: 190, vx: 15, vy: -13, radius: 3.5 },
+    // Ambient floating food / pellet nodes
+    const pellets: PelletNode[] = [
+      { x: (width || 320) * 0.38, y: (height || 260) * 0.42, vx: 5, vy: 4, radius: 2.0 },
+      { x: (width || 320) * 0.62, y: (height || 260) * 0.38, vx: -4, vy: 6, radius: 2.0 },
+      { x: (width || 320) * 0.46, y: (height || 260) * 0.65, vx: 6, vy: -5, radius: 2.0 },
+      { x: (width || 320) * 0.58, y: (height || 260) * 0.58, vx: -5, vy: -4, radius: 2.0 },
     ];
 
     let lastTime = performance.now();
-    let turnTimer = 0;
 
     const render = (now: number) => {
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // 1. Update Snake Head Motion (Autonomous smooth wander + boundary steering)
-      turnTimer += dt;
-      if (turnTimer > 0.4) {
-        turnTimer = 0;
-        // Natural smooth change in steering angle
-        snakeHead.targetTurnSpeed = (Math.random() - 0.5) * 2.8;
-      }
+      const centerX = cx();
+      const centerY = cy();
+      const maxRadius = Math.min(width, height) * 0.32; // Keeps all snakes centered
 
-      // Smooth turning interpolation
-      snakeHead.turnSpeed += (snakeHead.targetTurnSpeed - snakeHead.turnSpeed) * 0.08;
+      // 1. Update and Steer Each Snake
+      snakes.forEach((snake, idx) => {
+        snake.turnTimer += dt;
+        if (snake.turnTimer > 0.38) {
+          snake.turnTimer = 0;
+          // Harmonic wave motion + subtle random steering
+          const harmonic = Math.sin(now * 0.0018 + snake.phaseOffset) * 1.8;
+          const noise = (Math.random() - 0.5) * 1.4;
+          snake.targetTurnSpeed = harmonic + noise;
+        }
 
-      // Soft boundary avoidance to keep looping inside canvas
-      const margin = 38;
-      if (snakeHead.x < margin) snakeHead.turnSpeed += 1.8 * dt;
-      if (snakeHead.x > width - margin) snakeHead.turnSpeed -= 1.8 * dt;
-      if (snakeHead.y < margin) snakeHead.turnSpeed += 1.8 * dt;
-      if (snakeHead.y > height - margin) snakeHead.turnSpeed -= 1.8 * dt;
+        // Steer back towards center if drifting outside the middle zone
+        const dx = centerX - snake.x;
+        const dy = centerY - snake.y;
+        const distFromCenter = Math.hypot(dx, dy);
 
-      snakeHead.angle += snakeHead.turnSpeed * dt;
+        if (distFromCenter > maxRadius) {
+          const angleToCenter = Math.atan2(dy, dx);
+          let angleDiff = angleToCenter - snake.angle;
+          // Normalize angle difference to [-PI, PI]
+          while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+          while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
 
-      snakeHead.x += Math.cos(snakeHead.angle) * snakeHead.speed * dt;
-      snakeHead.y += Math.sin(snakeHead.angle) * snakeHead.speed * dt;
+          // Smooth restoring torque towards center
+          snake.targetTurnSpeed = angleDiff * 2.8;
+        }
 
-      // Clamp firmly inside container
-      snakeHead.x = Math.max(12, Math.min(width - 12, snakeHead.x));
-      snakeHead.y = Math.max(12, Math.min(height - 12, snakeHead.y));
+        // Interpolate turn speed
+        snake.turnSpeed += (snake.targetTurnSpeed - snake.turnSpeed) * 0.1;
+        snake.angle += snake.turnSpeed * dt;
 
-      // Append to history buffer
-      history.push({ x: snakeHead.x, y: snakeHead.y });
-      if (history.length > MAX_HISTORY) {
-        history.shift();
-      }
+        // Advance position
+        snake.x += Math.cos(snake.angle) * snake.speed * dt;
+        snake.y += Math.sin(snake.angle) * snake.speed * dt;
 
-      // 2. Update Drifting Peer Nodes
-      peerNodes.forEach((node, i) => {
-        node.x += node.vx * dt;
-        node.y += node.vy * dt;
-
-        // Bounce gently off boundaries
-        if (node.x < 20) { node.x = 20; node.vx *= -1; }
-        if (node.x > width - 20) { node.x = width - 20; node.vx *= -1; }
-        if (node.y < 20) { node.y = 20; node.vy *= -1; }
-        if (node.y > height - 20) { node.y = height - 20; node.vy *= -1; }
-
-        // Subtle gentle drift perturbation
-        node.vx += Math.sin(now * 0.001 + i) * 0.4 * dt;
-        node.vy += Math.cos(now * 0.0012 + i) * 0.4 * dt;
+        // Record history point
+        snake.history.push({ x: snake.x, y: snake.y });
+        if (snake.history.length > snake.maxHistory) {
+          snake.history.shift();
+        }
       });
 
-      // 3. Clear & Render
+      // 2. Update Pellets
+      pellets.forEach((p) => {
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        const dx = centerX - p.x;
+        const dy = centerY - p.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > maxRadius * 1.2) {
+          p.vx = (dx / dist) * 6;
+          p.vy = (dy / dist) * 6;
+        }
+      });
+
+      // 3. Clear Canvas
       ctx.clearRect(0, 0, width, height);
 
-      // Faint background coordinate dots
-      ctx.fillStyle = "rgba(245, 245, 245, 0.04)";
-      for (let x = 24; x < width; x += 36) {
-        for (let y = 24; y < height; y += 36) {
+      // Faint central coordinate grid dots
+      ctx.fillStyle = "rgba(245, 245, 245, 0.035)";
+      for (let x = 24; x < width; x += 32) {
+        for (let y = 24; y < height; y += 32) {
           ctx.fillRect(x, y, 1, 1);
         }
       }
 
-      // Draw Main Curving & Self-Intersecting Line
-      if (history.length > 2) {
-        ctx.strokeStyle = "#93AA82";
-        ctx.lineWidth = 1;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-
+      // Draw Ambient Pellets
+      pellets.forEach((p) => {
+        ctx.strokeStyle = "rgba(147, 170, 130, 0.55)";
+        ctx.lineWidth = 0.9;
+        ctx.fillStyle = "#080808";
         ctx.beginPath();
-        ctx.moveTo(history[0].x, history[0].y);
-
-        // Smooth curve interpolation through points
-        for (let i = 1; i < history.length - 1; i++) {
-          const xc = (history[i].x + history[i + 1].x) / 2;
-          const yc = (history[i].y + history[i + 1].y) / 2;
-          ctx.quadraticCurveTo(history[i].x, history[i].y, xc, yc);
-        }
-        ctx.lineTo(history[history.length - 1].x, history[history.length - 1].y);
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
-      }
+      });
 
-      // Draw Snake Head: Small Hollow Circle Node
-      ctx.strokeStyle = "#93AA82";
-      ctx.lineWidth = 1;
-      ctx.fillStyle = "#080808";
-      ctx.beginPath();
-      ctx.arc(snakeHead.x, snakeHead.y, 3.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+      // 4. Draw All Curving Snakes
+      snakes.forEach((snake, idx) => {
+        const hist = snake.history;
+        if (hist.length > 2) {
+          // Hairline moss-green stroke
+          ctx.strokeStyle = idx === 0 ? "#93AA82" : "rgba(147, 170, 130, 0.75)";
+          ctx.lineWidth = idx === 0 ? 1.1 : 0.9;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
 
-      // Draw 2-3 Drifting Hollow Circle Peer Nodes
-      peerNodes.forEach((node) => {
+          ctx.beginPath();
+          ctx.moveTo(hist[0].x, hist[0].y);
+
+          // Smooth quadratic Bézier interpolation
+          for (let i = 1; i < hist.length - 1; i++) {
+            const xc = (hist[i].x + hist[i + 1].x) / 2;
+            const yc = (hist[i].y + hist[i + 1].y) / 2;
+            ctx.quadraticCurveTo(hist[i].x, hist[i].y, xc, yc);
+          }
+          ctx.lineTo(hist[hist.length - 1].x, hist[hist.length - 1].y);
+          ctx.stroke();
+        }
+
+        // Draw Hollow Node Head
         ctx.strokeStyle = "#93AA82";
         ctx.lineWidth = 1;
         ctx.fillStyle = "#080808";
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.arc(snake.x, snake.y, snake.headRadius, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
       });
@@ -245,7 +265,7 @@ export function SlitherTraceScene() {
     <div
       ref={containerRef}
       className="slither-trace-scene"
-      aria-label="Slither.io Continuous Signal Trace Scene"
+      aria-label="Slither.io Multiplayer Signal Trace Scene"
     >
       <canvas ref={canvasRef} className="slither-trace-canvas" />
 
@@ -254,7 +274,7 @@ export function SlitherTraceScene() {
         <div className="telemetry-top">
           <span className="telemetry-badge">
             <span className="telemetry-dot" />
-            PEER MESH [3 NODES]
+            MULTI-ENTITY MESH [4 TRACES]
           </span>
           <span className="telemetry-coord">TOPOLOGY: LIVE TRACE</span>
         </div>

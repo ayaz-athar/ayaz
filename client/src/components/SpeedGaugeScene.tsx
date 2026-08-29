@@ -7,17 +7,6 @@ export function SpeedGaugeScene() {
   const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (prefersReducedMotion) {
-      setSpeedValue(842.0);
-      setNeedleAngle(72);
-      setPingValue(8.4);
-      return;
-    }
-
     const TARGET_SPEED = 846.5;
     const MIN_ANGLE = -110; // 0 Mbps
     const MAX_ANGLE = 110; // 1000 Mbps

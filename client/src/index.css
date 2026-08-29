@@ -156,8 +156,8 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
 .artifact-speedtest span:nth-child(5) { top: 12%; left: 50%; width: 8.6rem; height: 8.6rem; border: 1px solid rgba(147,170,130,0.18); border-radius: 50%; transform: translateX(-50%); }
 .artifact-speedtest span:nth-child(6) { bottom: 18%; left: 50%; width: 4.8rem; height: 1px; background: linear-gradient(90deg, transparent, rgba(245,245,245,0.4), transparent); transform: translateX(-50%); }
 
-/* CSS 3D Isometric Voxel Snake Scene */
-.snake-css3d-scene {
+/* 3D Isometric Voxel Snake Scene */
+.snake-canvas-scene {
   position: relative;
   width: 100%;
   height: 100%;
@@ -166,191 +166,14 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  perspective: 900px;
   background: radial-gradient(circle at 50% 50%, rgba(147, 170, 130, 0.04) 0%, #080808 85%);
   user-select: none;
 }
 
-.snake-stage-wrap {
-  width: 220px;
-  height: 220px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
-  animation: snake-float 6s ease-in-out infinite alternate;
-}
-
-.snake-stage {
+.snake-scene-canvas {
   width: 100%;
   height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transform: rotateX(58deg) rotateZ(-45deg);
-  animation: snake-stage-orbit 16s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-@keyframes snake-stage-orbit {
-  0% {
-    transform: rotateX(54deg) rotateZ(-48deg);
-  }
-  100% {
-    transform: rotateX(62deg) rotateZ(-42deg);
-  }
-}
-
-@keyframes snake-float {
-  0% {
-    transform: translateY(4px) scale(0.98);
-  }
-  100% {
-    transform: translateY(-6px) scale(1.02);
-  }
-}
-
-.voxel-grid-plane {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 160px;
-  height: 160px;
-  margin-top: -80px;
-  margin-left: -80px;
-  display: grid;
-  grid-template-rows: repeat(5, 1fr);
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-
-.grid-level-0 {
-  transform: translateZ(0px);
-  border: 1px solid rgba(245, 245, 245, 0.12);
-  background: rgba(8, 8, 8, 0.4);
-}
-
-.grid-level-mid {
-  transform: translateZ(64px);
-  border: 1px dashed rgba(147, 170, 130, 0.15);
-}
-
-.grid-level-top {
-  transform: translateZ(96px);
-  border: 1px solid rgba(245, 245, 245, 0.05);
-}
-
-.grid-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-}
-
-.grid-cell {
-  border: 1px solid rgba(245, 245, 245, 0.04);
-}
-
-.grid-level-0 .grid-cell {
-  border-color: rgba(245, 245, 245, 0.06);
-}
-
-.corner-pillar {
-  position: absolute;
-  width: 1px;
-  height: 96px;
-  background: linear-gradient(to top, rgba(147, 170, 130, 0.35), rgba(245, 245, 245, 0.05));
-  transform-origin: bottom center;
-  transform: rotateX(-90deg);
-  pointer-events: none;
-}
-
-.pillar-1 { top: 50%; left: 50%; margin-top: 80px; margin-left: -80px; }
-.pillar-2 { top: 50%; left: 50%; margin-top: 80px; margin-left: 80px; }
-.pillar-3 { top: 50%; left: 50%; margin-top: -80px; margin-left: 80px; }
-.pillar-4 { top: 50%; left: 50%; margin-top: -80px; margin-left: -80px; }
-
-.voxel-cube {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -7px;
-  margin-left: -7px;
-  transform-style: preserve-3d;
-  pointer-events: none;
-  transition: opacity 120ms ease;
-}
-
-.cube-face {
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(147, 170, 130, 0.4);
-  background: rgba(147, 170, 130, 0.65);
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
-}
-
-.cube-top {
-  background: rgba(184, 209, 164, 0.9);
-  border-color: rgba(210, 230, 195, 0.8);
-}
-
-.cube-front {
-  background: rgba(135, 158, 118, 0.7);
-}
-
-.cube-right {
-  background: rgba(115, 138, 98, 0.6);
-}
-
-.cube-left, .cube-back, .cube-bottom {
-  background: rgba(90, 110, 75, 0.5);
-}
-
-.voxel-cube.is-head .cube-face {
-  border-color: #d4e8c5;
-  box-shadow: 0 0 8px rgba(147, 170, 130, 0.7);
-}
-
-.voxel-cube.is-head .cube-top {
-  background: #dff0d0;
-}
-
-.target-node {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 12px;
-  height: 12px;
-  margin-top: -6px;
-  margin-left: -6px;
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-
-.target-core {
-  position: absolute;
-  inset: 2px;
-  border-radius: 50%;
-  background: var(--moss);
-  box-shadow: 0 0 10px var(--moss);
-  animation: target-pulse 2s ease-in-out infinite;
-}
-
-.target-pulse {
-  position: absolute;
-  inset: -4px;
-  border: 1px dashed var(--moss);
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: target-spin 4s linear infinite;
-}
-
-@keyframes target-pulse {
-  0%, 100% { transform: scale(0.85); opacity: 0.7; }
-  50% { transform: scale(1.15); opacity: 1; }
-}
-
-@keyframes target-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  display: block;
 }
 
 .snake-telemetry {
@@ -571,6 +394,37 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
   z-index: 2;
 }
 
+/* Python ML Pipeline Architecture DAG Scene */
+.ml-pipeline-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(147, 170, 130, 0.035) 0%, #080808 85%);
+  user-select: none;
+}
+
+.ml-pipeline-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pipeline-telemetry {
+  position: absolute;
+  inset: 0;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* 3D Continuous Motion Fraud Detection Credit Card */
 .fraud-3d-scene {
   position: relative;
@@ -581,8 +435,10 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
   align-items: center;
   justify-content: center;
   perspective: 1200px;
+  -webkit-perspective: 1200px;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   user-select: none;
-  overflow: hidden;
   pointer-events: none;
   background: radial-gradient(circle at 50% 50%, rgba(147, 170, 130, 0.04) 0%, rgba(8, 8, 8, 0.96) 75%);
 }
@@ -591,11 +447,13 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
   width: 290px;
   height: 175px;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: card-float 5s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .fraud-card {
@@ -603,8 +461,11 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   animation: card-continuous-orbit 14s linear infinite;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 @keyframes card-continuous-orbit {
@@ -647,11 +508,14 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
   background: #101010;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   overflow: hidden;
 }
 
 .card-front {
-  transform: rotateY(0deg) translateZ(1px);
+  transform: rotateY(0deg) translateZ(2px);
+  -webkit-transform: rotateY(0deg) translateZ(2px);
   padding: 1.1rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -659,8 +523,9 @@ h2 { margin-bottom: 0; font-size: clamp(2.8rem, 5.6vw, 6.65rem); line-height: 0.
 }
 
 .card-back {
-  transform: rotateY(180deg) translateZ(1px);
-  padding: 1rem 1.15rem 0.85rem;
+  transform: rotateY(180deg) translateZ(2px);
+  -webkit-transform: rotateY(180deg) translateZ(2px);
+  padding: 1rem 1.15rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1136,8 +1001,4 @@ a.project-view { pointer-events: auto; z-index: 20; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
-  .fraud-card-wrap { animation: none !important; }
-  .fraud-card { animation: none !important; transform: rotateX(4deg) rotateY(-12deg) !important; }
-  .scan-beam { animation: none !important; display: none !important; }
 }

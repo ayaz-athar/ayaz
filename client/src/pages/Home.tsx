@@ -21,6 +21,7 @@ import { SnakeScene3D } from "../components/SnakeScene3D";
 import { FlappyPhysicsScene } from "../components/FlappyPhysicsScene";
 import { SlitherTraceScene } from "../components/SlitherTraceScene";
 import { SpeedGaugeScene } from "../components/SpeedGaugeScene";
+import { MLPipelineScene } from "../components/MLPipelineScene";
 
 type Project = {
   index: string;
@@ -29,7 +30,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "snake" | "flappy" | "slither" | "fraud" | "speedtest";
+  visualType: "snake" | "flappy" | "slither" | "fraud" | "pipeline" | "speedtest";
   className: string;
 };
 
@@ -79,12 +80,21 @@ const projects: Project[] = [
   },
   {
     index: "05",
+    title: "Python ML Pipeline Structure",
+    description: "A modular, production-ready machine learning pipeline architecture for fraud detection featuring automated ETL ingestion, feature engineering, XGBoost training, evaluation, and artifact deployment.",
+    stack: ["Python", "Machine Learning", "Scikit-Learn", "ETL / MLOps"],
+    url: "https://github.com/ayaz-athar/fraud-ml-pipeline",
+    visualType: "pipeline",
+    className: "project-research",
+  },
+  {
+    index: "06",
     title: "SpeedTest",
     description: "A high-precision network benchmark measuring real-time latency, download, and upload speeds with an SVG speedometer gauge.",
     stack: ["JavaScript", "Streams API", "Node.js", "Express"],
     url: "https://github.com/ayaz-athar/SpeedTest",
     visualType: "speedtest",
-    className: "project-research project-span-full",
+    className: "project-research",
   },
 ];
 
@@ -108,9 +118,9 @@ const journey = [
 
 const socialLinks = [
   { label: "GitHub", href: "https://github.com/ayaz-athar", icon: Github },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/ayazathar", icon: Linkedin },
-  { label: "Instagram", href: "https://www.instagram.com/_ayazathar", icon: Instagram },
-  { label: "X", href: "https://x.com/ayazathar", icon: ExternalLink },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/ayaz-athar", icon: Linkedin },
+  { label: "Instagram", href: "https://www.instagram.com/ayaz_athar_", icon: Instagram },
+  { label: "Email", href: "mailto:ayazathar120@gmail.com", icon: Mail },
 ];
 
 function SectionMarker({ number, label }: { number: string; label: string }) {
@@ -130,6 +140,7 @@ function ProjectCard({ project }: { project: Project }) {
   const isSnakeProject = project.visualType === "snake";
   const isFlappyProject = project.visualType === "flappy";
   const isSlitherProject = project.visualType === "slither";
+  const isPipelineProject = project.visualType === "pipeline";
   const isSpeedtestProject = project.visualType === "speedtest";
 
   const content = (
@@ -143,6 +154,8 @@ function ProjectCard({ project }: { project: Project }) {
           <FlappyPhysicsScene />
         ) : isSlitherProject ? (
           <SlitherTraceScene />
+        ) : isPipelineProject ? (
+          <MLPipelineScene />
         ) : isSpeedtestProject ? (
           <SpeedGaugeScene />
         ) : (
