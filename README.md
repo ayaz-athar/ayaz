@@ -22,7 +22,7 @@ My personal portfolio website showcasing my **skills, projects, experience, and 
 
 ## 🔗 Links
 
-* **Portfolio:** https://ayazathar.netlify.app/
+* **Portfolio:** https://ayazathar.vercel.app/
 * **GitHub:** https://github.com/ayaz-athar
 * **LinkedIn:** https://www.linkedin.com/in/ayazathar
 

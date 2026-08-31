@@ -23,6 +23,7 @@ import { SlitherTraceScene } from "../components/SlitherTraceScene";
 import { SpeedGaugeScene } from "../components/SpeedGaugeScene";
 import { MLPipelineScene } from "../components/MLPipelineScene";
 import { CareerCopilotScene } from "../components/CareerCopilotScene";
+import { SwitchDocScene } from "../components/SwitchDocScene";
 
 type Project = {
   index: string;
@@ -31,7 +32,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "snake" | "flappy" | "slither" | "fraud" | "pipeline" | "copilot" | "speedtest";
+  visualType: "snake" | "flappy" | "slither" | "fraud" | "pipeline" | "copilot" | "switchdoc" | "speedtest";
   className: string;
 };
 
@@ -99,12 +100,21 @@ const projects: Project[] = [
   },
   {
     index: "07",
+    title: "SwitchDoc",
+    description: "A multi-format document conversion and transformation engine supporting high-precision bidirectional parsing between Markdown, PDF, DOCX, and JSON structured formats.",
+    stack: ["TypeScript", "Node.js", "Document Engine", "AST Parser"],
+    url: "https://github.com/ayaz-athar/SwitchDoc",
+    visualType: "switchdoc",
+    className: "project-research",
+  },
+  {
+    index: "08",
     title: "SpeedTest",
     description: "A high-precision network benchmark measuring real-time latency, download, and upload speeds with an SVG speedometer gauge.",
     stack: ["JavaScript", "Streams API", "Node.js", "Express"],
     url: "https://github.com/ayaz-athar/SpeedTest",
     visualType: "speedtest",
-    className: "project-research project-span-full",
+    className: "project-research",
   },
 ];
 
@@ -152,6 +162,7 @@ function ProjectCard({ project }: { project: Project }) {
   const isSlitherProject = project.visualType === "slither";
   const isPipelineProject = project.visualType === "pipeline";
   const isCopilotProject = project.visualType === "copilot";
+  const isSwitchDocProject = project.visualType === "switchdoc";
   const isSpeedtestProject = project.visualType === "speedtest";
 
   const content = (
@@ -169,6 +180,8 @@ function ProjectCard({ project }: { project: Project }) {
           <MLPipelineScene />
         ) : isCopilotProject ? (
           <CareerCopilotScene />
+        ) : isSwitchDocProject ? (
+          <SwitchDocScene />
         ) : isSpeedtestProject ? (
           <SpeedGaugeScene />
         ) : (
