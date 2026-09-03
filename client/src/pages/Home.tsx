@@ -24,6 +24,7 @@ import { SpeedGaugeScene } from "../components/SpeedGaugeScene";
 import { MLPipelineScene } from "../components/MLPipelineScene";
 import { CareerCopilotScene } from "../components/CareerCopilotScene";
 import { SwitchDocScene } from "../components/SwitchDocScene";
+import { ImageForgeScene } from "../components/ImageForgeScene";
 
 type Project = {
   index: string;
@@ -32,7 +33,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "snake" | "flappy" | "slither" | "fraud" | "pipeline" | "copilot" | "switchdoc" | "speedtest";
+  visualType: "snake" | "flappy" | "slither" | "fraud" | "pipeline" | "copilot" | "switchdoc" | "imageforge" | "speedtest";
   className: string;
 };
 
@@ -82,6 +83,15 @@ const projects: Project[] = [
   },
   {
     index: "05",
+    title: "ImageForge",
+    description: "A pure client-side image format converter and compressor powered by native HTML5 Canvas, offering in-memory conversion across WebP, JPEG, PNG, and GIF with zero server uploads and batch ZIP bundling.",
+    stack: ["JavaScript", "Canvas API", "WebP / JPEG / PNG", "Client-Side"],
+    url: "https://image-forge-theta.vercel.app/",
+    visualType: "imageforge",
+    className: "project-compact",
+  },
+  {
+    index: "06",
     title: "SpeedTest",
     description: "A high-precision network benchmark measuring real-time latency, download, and upload speeds with an SVG speedometer gauge.",
     stack: ["JavaScript", "Streams API", "Node.js", "Express"],
@@ -90,7 +100,7 @@ const projects: Project[] = [
     className: "project-research",
   },
   {
-    index: "06",
+    index: "07",
     title: "3D Snake",
     description: "A spatial game experiment built around movement, timing, and three-dimensional interaction.",
     stack: ["JavaScript", "3D", "Game logic"],
@@ -99,7 +109,7 @@ const projects: Project[] = [
     className: "project-compact",
   },
   {
-    index: "07",
+    index: "08",
     title: "Flappy Bird Game",
     description: "A focused browser-game build exploring input, collision, and responsive game flow.",
     stack: ["JavaScript", "HTML", "CSS"],
@@ -108,13 +118,13 @@ const projects: Project[] = [
     className: "project-tall",
   },
   {
-    index: "08",
+    index: "09",
     title: "Slither.io Clone",
     description: "A multiplayer-inspired interaction study centred on continuous motion and play systems.",
     stack: ["JavaScript", "Canvas", "Game logic"],
     url: "https://github.com/ayaz-athar/slither.io",
     visualType: "slither",
-    className: "project-compact",
+    className: "project-research project-span-full",
   },
 ];
 
@@ -163,6 +173,7 @@ function ProjectCard({ project }: { project: Project }) {
   const isPipelineProject = project.visualType === "pipeline";
   const isCopilotProject = project.visualType === "copilot";
   const isSwitchDocProject = project.visualType === "switchdoc";
+  const isImageForgeProject = project.visualType === "imageforge";
   const isSpeedtestProject = project.visualType === "speedtest";
 
   const content = (
@@ -182,6 +193,8 @@ function ProjectCard({ project }: { project: Project }) {
           <CareerCopilotScene />
         ) : isSwitchDocProject ? (
           <SwitchDocScene />
+        ) : isImageForgeProject ? (
+          <ImageForgeScene />
         ) : isSpeedtestProject ? (
           <SpeedGaugeScene />
         ) : (
