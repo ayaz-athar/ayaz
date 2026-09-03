@@ -120,7 +120,7 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/ayaz-athar", icon: Github },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/ayazathar", icon: Linkedin },
   { label: "Instagram", href: "https://www.instagram.com/_ayazathar", icon: Instagram },
-  { label: "Email", href: "mailto:ayaz.athar.44@gmail.com", icon: Mail },
+  { label: "Email", href: "https://mail.google.com/mail/?view=cm&fs=1&to=ayaz.athar.44@gmail.com", icon: Mail },
 ];
 
 function SectionMarker({ number, label }: { number: string; label: string }) {
@@ -323,7 +323,7 @@ export default function Home() {
             <p className="contact-preamble">Open to thoughtful technical collaboration.</p>
           </div>
           <div className="contact-actions reveal reveal-later">
-            <a className="email-link" href="mailto:ayaz.athar.44@gmail.com"><Mail size={18} /> ayaz.athar.44@gmail.com <ArrowUpRight size={17} /></a>
+            <a className="email-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=ayaz.athar.44@gmail.com" target="_blank" rel="noreferrer"><Mail size={18} /> ayaz.athar.44@gmail.com <ArrowUpRight size={17} /></a>
             <div className="social-list" aria-label="Social links">
               {socialLinks.map(({ label, href, icon: Icon }) => <a key={label} href={href} target="_blank" rel="noreferrer"><Icon size={15} /> {label}</a>)}
             </div>
