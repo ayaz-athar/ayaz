@@ -17,9 +17,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { FraudCard3D } from "../components/FraudCard3D";
-import { SnakeScene3D } from "../components/SnakeScene3D";
-import { FlappyPhysicsScene } from "../components/FlappyPhysicsScene";
-import { SlitherTraceScene } from "../components/SlitherTraceScene";
 import { SpeedGaugeScene } from "../components/SpeedGaugeScene";
 import { MLPipelineScene } from "../components/MLPipelineScene";
 import { CareerCopilotScene } from "../components/CareerCopilotScene";
@@ -33,7 +30,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "snake" | "flappy" | "slither" | "fraud" | "pipeline" | "copilot" | "switchdoc" | "imageforge" | "speedtest";
+  visualType: "fraud" | "pipeline" | "copilot" | "switchdoc" | "imageforge" | "speedtest";
   className: string;
 };
 
@@ -99,33 +96,6 @@ const projects: Project[] = [
     visualType: "speedtest",
     className: "project-research",
   },
-  {
-    index: "07",
-    title: "3D Snake",
-    description: "A spatial game experiment built around movement, timing, and three-dimensional interaction.",
-    stack: ["JavaScript", "3D", "Game logic"],
-    url: "https://github.com/ayaz-athar/3D_Snake",
-    visualType: "snake",
-    className: "project-compact",
-  },
-  {
-    index: "08",
-    title: "Flappy Bird Game",
-    description: "A focused browser-game build exploring input, collision, and responsive game flow.",
-    stack: ["JavaScript", "HTML", "CSS"],
-    url: "https://github.com/ayaz-athar/flappy-bird-game",
-    visualType: "flappy",
-    className: "project-tall",
-  },
-  {
-    index: "09",
-    title: "Slither.io Clone",
-    description: "A multiplayer-inspired interaction study centred on continuous motion and play systems.",
-    stack: ["JavaScript", "Canvas", "Game logic"],
-    url: "https://github.com/ayaz-athar/slither.io",
-    visualType: "slither",
-    className: "project-research project-span-full",
-  },
 ];
 
 const skillGroups = [
@@ -167,9 +137,6 @@ function ProjectCard({ project }: { project: Project }) {
   const [imageError, setImageError] = useState(false);
 
   const isFraudProject = project.visualType === "fraud";
-  const isSnakeProject = project.visualType === "snake";
-  const isFlappyProject = project.visualType === "flappy";
-  const isSlitherProject = project.visualType === "slither";
   const isPipelineProject = project.visualType === "pipeline";
   const isCopilotProject = project.visualType === "copilot";
   const isSwitchDocProject = project.visualType === "switchdoc";
@@ -181,12 +148,6 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="project-visual">
         {isFraudProject ? (
           <FraudCard3D />
-        ) : isSnakeProject ? (
-          <SnakeScene3D />
-        ) : isFlappyProject ? (
-          <FlappyPhysicsScene />
-        ) : isSlitherProject ? (
-          <SlitherTraceScene />
         ) : isPipelineProject ? (
           <MLPipelineScene />
         ) : isCopilotProject ? (
