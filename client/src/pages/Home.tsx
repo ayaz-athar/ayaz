@@ -22,6 +22,7 @@ import { MLPipelineScene } from "../components/MLPipelineScene";
 import { CareerCopilotScene } from "../components/CareerCopilotScene";
 import { SwitchDocScene } from "../components/SwitchDocScene";
 import { ImageForgeScene } from "../components/ImageForgeScene";
+import { MindScribeScene } from "../components/MindScribeScene";
 
 type Project = {
   index: string;
@@ -30,7 +31,7 @@ type Project = {
   stack: string[];
   image?: string;
   url?: string;
-  visualType: "fraud" | "pipeline" | "copilot" | "switchdoc" | "imageforge" | "speedtest";
+  visualType: "fraud" | "pipeline" | "mindscribe" | "copilot" | "switchdoc" | "imageforge" | "speedtest";
   className: string;
 };
 
@@ -62,39 +63,48 @@ const projects: Project[] = [
   },
   {
     index: "03",
+    title: "MindScribe AI",
+    description: "A production-grade, secure, multi-tenant journal web application built for the Google Cloud Run Hackathon. Features Firebase Auth, per-user scoped Cloud Firestore, Server-Side Gemini 1.5 AI reflections, and cryptographic Bearer token verification.",
+    stack: ["React", "Node.js", "Express", "Gemini 1.5 AI", "Cloud Run", "Firebase"],
+    url: "https://github.com/ayaz-athar/MindScribe",
+    visualType: "mindscribe",
+    className: "project-compact",
+  },
+  {
+    index: "04",
     title: "Career Copilot",
     description: "An AI-powered career assistant and intelligent ATS resume analyzer that parses candidate profiles, extracts key competencies, computes job-fit compatibility scores, and provides optimization recommendations.",
     stack: ["Python", "FastAPI", "AI / LLM", "NLP / ATS"],
     url: "https://github.com/ayaz-athar/career_copilot",
     visualType: "copilot",
-    className: "project-compact",
+    className: "project-research",
   },
   {
-    index: "04",
+    index: "05",
     title: "SwitchDoc",
     description: "A multi-format document conversion and transformation engine supporting high-precision bidirectional parsing between Markdown, PDF, DOCX, and JSON structured formats.",
     stack: ["TypeScript", "Node.js", "Document Engine", "AST Parser"],
     url: "https://github.com/ayaz-athar/SwitchDoc",
     visualType: "switchdoc",
-    className: "project-research",
+    className: "project-compact",
   },
   {
-    index: "05",
+    index: "06",
     title: "ImageForge",
     description: "A pure client-side image format converter and compressor powered by native HTML5 Canvas, offering in-memory conversion across WebP, JPEG, PNG, and GIF with zero server uploads and batch ZIP bundling.",
     stack: ["JavaScript", "Canvas API", "WebP / JPEG / PNG", "Client-Side"],
     url: "https://image-forge-theta.vercel.app/",
     visualType: "imageforge",
-    className: "project-compact",
+    className: "project-research",
   },
   {
-    index: "06",
+    index: "07",
     title: "SpeedTest",
     description: "A high-precision network benchmark measuring real-time latency, download, and upload speeds with an SVG speedometer gauge.",
     stack: ["JavaScript", "Streams API", "Node.js", "Express"],
     url: "https://github.com/ayaz-athar/SpeedTest",
     visualType: "speedtest",
-    className: "project-research",
+    className: "project-research project-span-full",
   },
 ];
 
@@ -138,6 +148,7 @@ function ProjectCard({ project }: { project: Project }) {
 
   const isFraudProject = project.visualType === "fraud";
   const isPipelineProject = project.visualType === "pipeline";
+  const isMindScribeProject = project.visualType === "mindscribe";
   const isCopilotProject = project.visualType === "copilot";
   const isSwitchDocProject = project.visualType === "switchdoc";
   const isImageForgeProject = project.visualType === "imageforge";
@@ -150,6 +161,8 @@ function ProjectCard({ project }: { project: Project }) {
           <FraudCard3D />
         ) : isPipelineProject ? (
           <MLPipelineScene />
+        ) : isMindScribeProject ? (
+          <MindScribeScene />
         ) : isCopilotProject ? (
           <CareerCopilotScene />
         ) : isSwitchDocProject ? (
