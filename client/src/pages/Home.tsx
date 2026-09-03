@@ -118,9 +118,9 @@ const journey = [
 
 const socialLinks = [
   { label: "GitHub", href: "https://github.com/ayaz-athar", icon: Github },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/ayaz-athar", icon: Linkedin },
-  { label: "Instagram", href: "https://www.instagram.com/ayaz_athar_", icon: Instagram },
-  { label: "Email", href: "mailto:ayazathar120@gmail.com", icon: Mail },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/ayazathar", icon: Linkedin },
+  { label: "Instagram", href: "https://www.instagram.com/_ayazathar", icon: Instagram },
+  { label: "Email", href: "mailto:ayaz.athar.44@gmail.com", icon: Mail },
 ];
 
 function SectionMarker({ number, label }: { number: string; label: string }) {

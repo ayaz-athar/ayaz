@@ -25,6 +25,8 @@ My personal portfolio website showcasing my **skills, projects, experience, and 
 * **Portfolio:** https://ayazathar.vercel.app/
 * **GitHub:** https://github.com/ayaz-athar
 * **LinkedIn:** https://www.linkedin.com/in/ayazathar
+* **Instagram:** https://www.instagram.com/_ayazathar
+* **Email:** ayaz.athar.44@gmail.com
 
 ## 📦 Run Locally
 
